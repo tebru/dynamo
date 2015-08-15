@@ -96,7 +96,8 @@ class ClassModelTransformer
             $method->makePublic();
 
             // add method body
-            $methodStatements = $this->parser->parse($methodModel->getBody());
+            $body = '<?php ' . $methodModel->getBody();
+            $methodStatements = $this->parser->parse($body);
 
             if (null !== $methodStatements) {
                 $methodStatements = $this->nodeTraverser->traverse($methodStatements);
