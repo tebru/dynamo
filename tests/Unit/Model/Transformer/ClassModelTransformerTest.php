@@ -113,6 +113,7 @@ class ClassModelTransformerTest extends MockeryTestCase
         $builderFactory->shouldReceive('method')->times(1)->with(self::CLASS_METHOD)->andReturn($method);
         $builderFactory->shouldReceive('param')->times(1)->with(self::METHOD_PARAMETER)->andReturn($parameter);
         $class->shouldReceive('implement')->times(1)->with(self::CLASS_INTERFACE)->andReturnNull();
+        $class->shouldReceive('addStmt')->times(1)->with($property)->andReturnNull();
         $class->shouldReceive('addStmt')->times(1)->with($method)->andReturnNull();
         $property->shouldReceive('setDefault')->times(1)->with([])->andReturnNull();
         $property->shouldReceive($visibilityMethod)->times(1)->withNoArgs()->andReturnNull();

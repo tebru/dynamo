@@ -88,6 +88,9 @@ class ClassModelTransformer
                 default:
                     throw new UnexpectedValueException('Property visibility must be public, protected, private');
             }
+
+            // add property to class
+            $class->addStmt($property);
         }
 
         // add class methods
