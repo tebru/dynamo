@@ -34,11 +34,17 @@ class ClassModelCacher
      * @var Filesystem
      */
     private $filesystem;
+
     /**
+     * Transforms a class model to a php parser class
+     *
      * @var ClassModelTransformer
      */
     private $classModelTransformer;
+
     /**
+     * Pretty printer
+     *
      * @var PrettyPrinterAbstract
      */
     private $printer;
