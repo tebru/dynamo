@@ -58,7 +58,7 @@ class Generator
      * This method will dispatch events that can be used to set method bodies or modify the class
      *
      * @param string $interfaceName
-     * @return $this;
+     * @return $this
      */
     public function createAndWrite($interfaceName)
     {
