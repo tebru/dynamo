@@ -97,8 +97,11 @@ class ClassModelTransformer
 
             // add method body
             $methodStatements = $this->parser->parse($methodModel->getBody());
-            $methodStatements = $this->nodeTraverser->traverse($methodStatements);
-            $method->addStmts($methodStatements);
+
+            if (null !== $methodStatements) {
+                $methodStatements = $this->nodeTraverser->traverse($methodStatements);
+                $method->addStmts($methodStatements);
+            }
 
             // add method parameters
             foreach ($methodModel->getParameters() as $parameterModel) {
