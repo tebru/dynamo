@@ -79,7 +79,7 @@ class ClassModelCacher
 
         // convert class model to string
         $statements = $this->classModelTransformer->transform($classModel);
-        $class = $this->printer->prettyPrint($statements);
+        $class = $this->printer->prettyPrintFile($statements);
 
         // write file
         $this->filesystem->dumpFile($filename, $class);
