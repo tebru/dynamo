@@ -110,33 +110,39 @@ class AnnotationCollection
     /**
      * Add a method annotation to the list
      *
-     * @param $annotation
+     * @param object $annotation
      * @return $this
      */
     public function addMethodAnnotation($annotation)
     {
-        if (!is_object($annotation)) {
-            throw new InvalidArgumentException('Annotation must be an object');
-        }
-
-        $this->methodAnnotations[get_class($annotation)][] = $annotation;
-
-        return $this;
+        return $this->addAnnotation($annotation, $this->methodAnnotations);
     }
 
     /**
      * Add a class annotation to the list
      *
-     * @param $annotation
+     * @param object $annotation
      * @return $this
      */
     public function addClassAnnotation($annotation)
+    {
+        return $this->addAnnotation($annotation, $this->classAnnotations);
+    }
+
+    /**
+     * Adds an annotation to the class or method annotations array
+     *
+     * @param object $annotation
+     * @param array $annotationArray
+     * @return $this
+     */
+    private function addAnnotation($annotation, array &$annotationArray)
     {
         if (!is_object($annotation)) {
             throw new InvalidArgumentException('Annotation must be an object');
         }
 
-        $this->classAnnotations[get_class($annotation)][] = $annotation;
+        $annotationArray[get_class($annotation)][] = $annotation;
 
         return $this;
     }
