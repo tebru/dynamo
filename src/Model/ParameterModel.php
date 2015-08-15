@@ -148,7 +148,7 @@ class ParameterModel
      */
     public function hasTypeHint()
     {
-        return null !== $this->typeHint;
+        return !empty($this->typeHint);
     }
 
     /**

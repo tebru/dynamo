@@ -116,7 +116,7 @@ class ClassModelTransformerTest extends MockeryTestCase
         $class->shouldReceive('addStmt')->times(1)->with($method)->andReturnNull();
         $property->shouldReceive('setDefault')->times(1)->with([])->andReturnNull();
         $property->shouldReceive($visibilityMethod)->times(1)->withNoArgs()->andReturnNull();
-        $parser->shouldReceive('parse')->times(1)->with('$x = 1;')->andReturn(['']);
+        $parser->shouldReceive('parse')->times(1)->with('<?php $x = 1;')->andReturn(['']);
         $traverser->shouldReceive('traverse')->times(1)->with([''])->andReturn(['']);
         $method->shouldReceive('makePublic')->times(1)->withNoArgs()->andReturnNull();
         $method->shouldReceive('addStmts')->times(1)->with([''])->andReturnNull();

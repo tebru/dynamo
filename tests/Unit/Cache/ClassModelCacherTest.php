@@ -47,7 +47,7 @@ class ClassModelCacherTest extends MockeryTestCase
         $filesystem->shouldReceive('mkdir')->times(1)->with($path)->andReturnNull();
         $filesystem->shouldReceive('dumpFile')->times(1)->with($filename, 'content');
         $classModelTransformer->shouldReceive('transform')->times(1)->with($classModel)->andReturn(['']);
-        $printer->shouldReceive('prettyPrint')->times(1)->with([''])->andReturn('content');
+        $printer->shouldReceive('prettyPrintFile')->times(1)->with([''])->andReturn('content');
         $classModel->shouldReceive('getNamespace')->times(1)->withNoArgs()->andReturn($namespace);
         $classModel->shouldReceive('getName')->times(1)->withNoArgs()->andReturn($className);
 
