@@ -40,14 +40,14 @@ class ClassModel
     /**
      * Class methods
      *
-     * @var MethodModel[]
+     * @var MethodModel[]|ArrayCollection
      */
     private $methods;
 
     /**
      * Class properties
      *
-     * @var PropertyModel[]
+     * @var PropertyModel[]|ArrayCollection
      */
     private $properties;
 

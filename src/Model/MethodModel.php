@@ -33,7 +33,7 @@ class MethodModel
     /**
      * Method parameters
      *
-     * @var ParameterModel[]
+     * @var ParameterModel[]|ArrayCollection
      */
     private $parameters;
 
