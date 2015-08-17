@@ -89,8 +89,7 @@ class ClassModelFactory
         foreach ($methods as $methodDataProvider) {
             $methodModel = $this->methodModelFactory->make($classModel, $methodDataProvider);
 
-            $annotationCollection = new AnnotationCollection();
-            $annotationCollection->addAnnotations($methodDataProvider->getAnnotations());
+            $annotationCollection = $methodDataProvider->getAnnotations();
 
             // dispatch the method event
             $this->eventDispatcher->dispatch(MethodEvent::NAME, new MethodEvent($methodModel, $annotationCollection));

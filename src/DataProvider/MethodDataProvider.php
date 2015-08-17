@@ -7,6 +7,7 @@
 namespace Tebru\Dynamo\DataProvider;
 
 use ReflectionMethod;
+use Tebru\Dynamo\Collection\AnnotationCollection;
 use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
 
@@ -83,7 +84,7 @@ class MethodDataProvider
     /**
      * Get the method annotations including the class annotations
      *
-     * @return array
+     * @return AnnotationCollection
      */
     public function getAnnotations()
     {

@@ -8,6 +8,7 @@ namespace Tebru\Dynamo\Test\Unit\Model\Factory;
 
 use Mockery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Tebru\Dynamo\Collection\AnnotationCollection;
 use Tebru\Dynamo\DataProvider\Factory\InterfaceDataProviderFactory;
 use Tebru\Dynamo\DataProvider\InterfaceDataProvider;
 use Tebru\Dynamo\DataProvider\MethodDataProvider;
@@ -56,7 +57,8 @@ class ClassModelFactoryTest extends MockeryTestCase
         $methodDataProvider = Mockery::mock(MethodDataProvider::class);
         $methodModel = Mockery::mock(MethodModel::class);
 
-        $methodAnnotations = [MockAnnotation::class => new MockAnnotation()];
+        $annotationCollection = new AnnotationCollection();
+        $annotationCollection->addAnnotations([MockAnnotation::class => new MockAnnotation()]);
 
         if ($shouldStub) {
             $interfaceDataProviderFactory->shouldReceive('make')->times(1)->with($interfaceName)->andReturn($interfaceDataProvider);
@@ -65,7 +67,7 @@ class ClassModelFactoryTest extends MockeryTestCase
             $interfaceDataProvider->shouldReceive('getFullName')->times(1)->withNoArgs()->andReturn('\\' . MockInterface::class);
             $interfaceDataProvider->shouldReceive('getMethods')->times(1)->withNoArgs()->andReturn([$methodDataProvider]);
             $methodModelFactory->shouldReceive('make')->times(1)->with(Mockery::type(ClassModel::class), $methodDataProvider)->andReturn($methodModel);
-            $methodDataProvider->shouldReceive('getAnnotations')->times(1)->withNoArgs()->andReturn($methodAnnotations);
+            $methodDataProvider->shouldReceive('getAnnotations')->times(1)->withNoArgs()->andReturn($annotationCollection);
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(StartEvent::NAME, Mockery::type(StartEvent::class))->andReturnNull();
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(MethodEvent::NAME, Mockery::type(MethodEvent::class))->andReturnNull();
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(EndEvent::NAME, Mockery::type(EndEvent::class))->andReturnNull();
