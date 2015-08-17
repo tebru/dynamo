@@ -12,6 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Tebru\Dynamo\Cache\ClassModelCacher;
 use Tebru\Dynamo\Model\ClassModel;
 use Tebru\Dynamo\Model\Transformer\ClassModelTransformer;
+use Tebru\Dynamo\Test\Mock\MockInterface;
 use Tebru\Dynamo\Test\Unit\MockeryTestCase;
 
 /**
@@ -34,9 +35,9 @@ class ClassModelCacherTest extends MockeryTestCase
     public function testWrite()
     {
         $cacheDir = 'cache/dynamo';
-        $namespace = 'Tebru\\Test';
+        $interface = '\\' . MockInterface::class;
         $className = 'Foo';
-        $path = "$cacheDir/Tebru/Test";
+        $path = "$cacheDir/Tebru/Dynamo/Test/Mock";
         $filename = "$path/$className.php";
 
         $filesystem = Mockery::mock(Filesystem::class);
@@ -48,7 +49,7 @@ class ClassModelCacherTest extends MockeryTestCase
         $filesystem->shouldReceive('dumpFile')->times(1)->with($filename, 'content');
         $classModelTransformer->shouldReceive('transform')->times(1)->with($classModel)->andReturn(['']);
         $printer->shouldReceive('prettyPrintFile')->times(1)->with([''])->andReturn('content');
-        $classModel->shouldReceive('getNamespace')->times(1)->withNoArgs()->andReturn($namespace);
+        $classModel->shouldReceive('getInterface')->times(1)->withNoArgs()->andReturn($interface);
         $classModel->shouldReceive('getName')->times(1)->withNoArgs()->andReturn($className);
 
         $cacher = new ClassModelCacher($cacheDir, $filesystem, $classModelTransformer, $printer);

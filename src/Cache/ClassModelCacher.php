@@ -73,7 +73,7 @@ class ClassModelCacher
     public function write(ClassModel $classModel)
     {
         // create cache directory and get filename
-        $path = $this->cacheDir . $this->namespaceToPath($classModel->getNamespace());
+        $path = $this->cacheDir . $this->interfaceToPath($classModel->getInterface());
         $this->filesystem->mkdir($path);
         $filename = $path . DIRECTORY_SEPARATOR . $classModel->getName() . '.php';
 
@@ -88,13 +88,15 @@ class ClassModelCacher
     /**
      * Converts a namespace to a file path
      *
-     * @param $namespace
+     * @param string $interface
      * @return string
      */
-    private function namespaceToPath($namespace)
+    private function interfaceToPath($interface)
     {
-        $path = explode('\\', $namespace);
-        $path = implode(DIRECTORY_SEPARATOR, $path);
+        $parts = explode('\\', $interface);
+        $parts = array_slice($parts, 0, -1);
+        array_shift($parts);
+        $path = implode(DIRECTORY_SEPARATOR, $parts);
 
         return DIRECTORY_SEPARATOR . $path;
     }
