@@ -6,9 +6,9 @@
 
 namespace Tebru\Dynamo\Test\Unit\DataProvider\Factory;
 
-use Doctrine\Common\Annotations\Reader;
 use Mockery;
 use ReflectionMethod;
+use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\MethodDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
 use Tebru\Dynamo\DataProvider\MethodDataProvider;
@@ -23,7 +23,7 @@ class MethodDataProviderFactoryTest extends MockeryTestCase
 {
     public function testCanCreateMethodDataProvider()
     {
-        $factory = new MethodDataProviderFactory(Mockery::mock(ParameterDataProviderFactory::class), Mockery::mock(Reader::class));
+        $factory = new MethodDataProviderFactory(Mockery::mock(ParameterDataProviderFactory::class), Mockery::mock(AnnotationDataProviderFactory::class));
         $provider = $factory->make(Mockery::mock(ReflectionMethod::class));
 
         $this->assertInstanceOf(MethodDataProvider::class, $provider);

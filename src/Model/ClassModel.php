@@ -7,7 +7,7 @@
 namespace Tebru\Dynamo\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use InvalidArgumentException;
+use Tebru;
 
 /**
  * Class ClassModel
@@ -141,11 +141,10 @@ class ClassModel
      */
     public function addMethod(MethodModel $methodModel)
     {
-        if ($this->methods->containsKey($methodModel->getName())) {
-            throw new InvalidArgumentException(sprintf('Method "%s" already exists on class', $methodModel->getName()));
-        }
+        $methodName = $methodModel->getName();
+        Tebru\assertArrayKeyNotExists($methodName, $this->methods->toArray(), 'Method "%s" already exists on class', $methodName);
 
-        $this->methods->set($methodModel->getName(), $methodModel);
+        $this->methods->set($methodName, $methodModel);
 
         return $this;
     }
@@ -171,9 +170,7 @@ class ClassModel
      */
     public function getMethod($methodName)
     {
-        if (!$this->methods->containsKey($methodName)) {
-            throw new InvalidArgumentException(sprintf('Method "%s" does not exist on class', $methodName));
-        }
+        Tebru\assertArrayKeyExists($methodName, $this->methods->toArray(), 'Method "%s" does not exist on class', $methodName);
 
         return $this->methods->get($methodName);
     }
@@ -196,11 +193,10 @@ class ClassModel
      */
     public function addProperty(PropertyModel $propertyModel)
     {
-        if ($this->properties->containsKey($propertyModel->getName())) {
-            throw new InvalidArgumentException(sprintf('Property "%s" already exists on class', $propertyModel->getName()));
-        }
+        $propertyName = $propertyModel->getName();
+        Tebru\assertArrayKeyNotExists($propertyName, $this->properties->toArray(), 'Property "%s" already exists on class', $propertyName);
 
-        $this->properties->set($propertyModel->getName(), $propertyModel);
+        $this->properties->set($propertyName, $propertyModel);
 
         return $this;
     }
@@ -226,9 +222,7 @@ class ClassModel
      */
     public function getProperty($propertyName)
     {
-        if (!$this->properties->containsKey($propertyName)) {
-            throw new InvalidArgumentException(sprintf('Property "%s" does not exist on class', $propertyName));
-        }
+        Tebru\assertArrayKeyExists($propertyName, $this->properties->toArray(), 'Property "%s" does not exist on class', $propertyName);
 
         return $this->properties->get($propertyName);
     }

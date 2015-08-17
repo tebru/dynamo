@@ -17,6 +17,7 @@ use PhpParser\PrettyPrinterAbstract;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Tebru\Dynamo\Cache\ClassModelCacher;
+use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\InterfaceDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\MethodDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
@@ -45,6 +46,7 @@ class GeneratorBuilderTest extends MockeryTestCase
         $namespacePrefix = 'Tebru\\Test';
         $parameterDataProviderFactory = Mockery::mock(ParameterDataProviderFactory::class);
         $reader = Mockery::mock(Reader::class);
+        $annotationDataProviderFactory = Mockery::mock(AnnotationDataProviderFactory::class);
         $methodDataProviderFactory = Mockery::mock(MethodDataProviderFactory::class);
         $interfaceDataProviderFactory = Mockery::mock(InterfaceDataProviderFactory::class);
         $parameterModelFactory = Mockery::mock(ParameterModelFactory::class);
@@ -67,6 +69,7 @@ class GeneratorBuilderTest extends MockeryTestCase
             ->setNamespacePrefix($namespacePrefix)
             ->setParameterDataProviderFactory($parameterDataProviderFactory)
             ->setReader($reader)
+            ->setAnnotationDataProviderFactory($annotationDataProviderFactory)
             ->setMethodDataProviderFactory($methodDataProviderFactory)
             ->setInterfaceDataProviderFactory($interfaceDataProviderFactory)
             ->setParameterModelFactory($parameterModelFactory)

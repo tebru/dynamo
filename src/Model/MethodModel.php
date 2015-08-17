@@ -7,7 +7,7 @@
 namespace Tebru\Dynamo\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use InvalidArgumentException;
+use Tebru;
 
 /**
  * Class MethodModel
@@ -98,11 +98,10 @@ class MethodModel
      */
     public function addParameter(ParameterModel $parameterModel)
     {
-        if ($this->parameters->containsKey($parameterModel->getName())) {
-            throw new InvalidArgumentException(sprintf('Parameter "%s" already exists in method', $parameterModel->getName()));
-        }
+        $parameterName = $parameterModel->getName();
+        Tebru\assertArrayKeyNotExists($parameterName, $this->parameters->toArray(), 'Parameter "%s" already exists in method', $parameterName);
 
-        $this->parameters->set($parameterModel->getName(), $parameterModel);
+        $this->parameters->set($parameterName, $parameterModel);
 
         return $this;
     }
@@ -128,9 +127,7 @@ class MethodModel
      */
     public function getParameter($parameterName)
     {
-        if (!$this->parameters->containsKey($parameterName)) {
-            throw new InvalidArgumentException(sprintf('Parameter "%s" does not exist in method', $parameterName));
-        }
+        Tebru\assertArrayKeyExists($parameterName, $this->parameters->toArray(), 'Parameter "%s" does not exist in method', $parameterName);
 
         return $this->parameters->get($parameterName);
     }

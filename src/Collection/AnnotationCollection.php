@@ -6,7 +6,11 @@
 
 namespace Tebru\Dynamo\Collection;
 
-use InvalidArgumentException;
+use ArrayIterator;
+use Tebru;
+use Tebru\Dynamo\Annotation\DynamoAnnotation;
+use Traversable;
+use UnexpectedValueException;
 
 /**
  * Class AnnotationCollection
@@ -15,136 +19,23 @@ use InvalidArgumentException;
  *
  * @author Nate Brunette <n@tebru.net>
  */
-class AnnotationCollection
+class AnnotationCollection implements \IteratorAggregate
 {
     /**
      * A list of class level annotations
      *
-     * @var array
+     * @var DynamoAnnotation[]
      */
-    private $classAnnotations = [];
-
-    /**
-     * A list of method level annotations
-     *
-     * @var array
-     */
-    private $methodAnnotations = [];
+    private $annotations = [];
 
     /**
      * Get class and method annotations together
      *
-     * @return array
+     * @return DynamoAnnotation[]
      */
     public function getAnnotations()
     {
-        $returnAnnotations = [];
-
-        foreach ($this->classAnnotations as $key => $classAnnotation) {
-            foreach ($classAnnotation as $annotation) {
-                $returnAnnotations[$key][] = $annotation;
-            }
-        }
-
-        foreach ($this->methodAnnotations as $key => $methodAnnotation) {
-            foreach ($methodAnnotation as $annotation) {
-                $returnAnnotations[$key][] = $annotation;
-            }
-        }
-
-        return $returnAnnotations;
-    }
-
-    /**
-     * Get only the method annotations
-     *
-     * @return array
-     */
-    public function getMethodAnnotations()
-    {
-        return $this->methodAnnotations;
-    }
-
-    /**
-     * Get only the class annotations
-     *
-     * @return array
-     */
-    public function getClassAnnotations()
-    {
-        return $this->classAnnotations;
-    }
-
-    /**
-     * Set all of the method annotations
-     *
-     * @param array $methodAnnotations
-     * @return $this
-     */
-    public function setMethodAnnotations(array $methodAnnotations)
-    {
-        $this->methodAnnotations = [];
-        foreach ($methodAnnotations as $methodAnnotation) {
-            $this->addMethodAnnotation($methodAnnotation);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set all of the class annotations
-     *
-     * @param array $classAnnotations
-     * @return $this
-     */
-    public function setClassAnnotations(array $classAnnotations)
-    {
-        $this->classAnnotations = [];
-        foreach ($classAnnotations as $classAnnotation) {
-            $this->addClassAnnotation($classAnnotation);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a method annotation to the list
-     *
-     * @param object $annotation
-     * @return $this
-     */
-    public function addMethodAnnotation($annotation)
-    {
-        return $this->addAnnotation($annotation, $this->methodAnnotations);
-    }
-
-    /**
-     * Add a class annotation to the list
-     *
-     * @param object $annotation
-     * @return $this
-     */
-    public function addClassAnnotation($annotation)
-    {
-        return $this->addAnnotation($annotation, $this->classAnnotations);
-    }
-
-    /**
-     * Adds an annotation to the class or method annotations array
-     *
-     * @param object $annotation
-     * @param array $annotationArray
-     * @return $this
-     */
-    private function addAnnotation($annotation, array &$annotationArray)
-    {
-        if (!is_object($annotation)) {
-            throw new InvalidArgumentException('Annotation must be an object');
-        }
-
-        $annotationArray[get_class($annotation)][] = $annotation;
-
-        return $this;
+        return $this->annotations;
     }
 
     /**
@@ -153,34 +44,69 @@ class AnnotationCollection
      * @param string $name
      * @return bool
      */
-    public function annotationExists($name)
+    public function exists($name)
     {
-        if ($this->methodAnnotationExists($name) || $this->classAnnotationExists($name)) {
-            return true;
+        return array_key_exists($name, $this->annotations);
+    }
+
+    /**
+     * Get an annotation by key
+     *
+     * @param string $name
+     * @return object|array
+     */
+    public function get($name)
+    {
+        Tebru\assertArrayKeyExists($name, $this->annotations);
+
+        return $this->annotations[$name];
+    }
+
+    /**
+     * Set all of the method annotations
+     *
+     * @param DynamoAnnotation[] $annotations
+     * @return $this
+     */
+    public function addAnnotations(array $annotations)
+    {
+        foreach ($annotations as $annotation) {
+            $this->addAnnotation($annotation);
         }
 
-        return false;
+        return $this;
     }
 
     /**
-     * See if method annotation exists
+     * Add a method annotation to the list
      *
-     * @param string $name
-     * @return bool
+     * @param DynamoAnnotation $annotation
+     * @return $this
      */
-    public function methodAnnotationExists($name)
+    public function addAnnotation(DynamoAnnotation $annotation)
     {
-        return array_key_exists($name, $this->methodAnnotations);
+        if (!$annotation->allowMultiple() && $this->exists($annotation->getName())) {
+            throw new UnexpectedValueException('May not use multiple instances of annotation');
+        }
+
+        if ($annotation->allowMultiple()) {
+            $this->annotations[$annotation->getName()][] = $annotation;
+        } else {
+            $this->annotations[$annotation->getName()] = $annotation;
+        }
+
+        return $this;
     }
 
     /**
-     * See if class annotation exists
-     *
-     * @param string $name
-     * @return bool
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Retrieve an external iterator
+     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or
+     * <b>Traversable</b>
      */
-    public function classAnnotationExists($name)
+    public function getIterator()
     {
-        return array_key_exists($name, $this->classAnnotations);
+        return new ArrayIterator($this->annotations);
     }
 }

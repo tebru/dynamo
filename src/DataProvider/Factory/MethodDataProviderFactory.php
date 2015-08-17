@@ -6,7 +6,6 @@
 
 namespace Tebru\Dynamo\DataProvider\Factory;
 
-use Doctrine\Common\Annotations\Reader;
 use ReflectionMethod;
 use Tebru\Dynamo\DataProvider\MethodDataProvider;
 
@@ -25,22 +24,22 @@ class MethodDataProviderFactory
     private $parameterDataProviderFactory;
 
     /**
-     * Doctrine annotation reader
+     * Creates annotation data providers
      *
-     * @var Reader
+     * @var AnnotationDataProviderFactory
      */
-    private $reader;
+    private $annotationDataProviderFactory;
 
     /**
      * Constructor
      *
      * @param ParameterDataProviderFactory $parameterDataProviderFactory
-     * @param Reader $reader
+     * @param AnnotationDataProviderFactory $annotationDataProviderFactory
      */
-    public function __construct(ParameterDataProviderFactory $parameterDataProviderFactory, Reader $reader)
+    public function __construct(ParameterDataProviderFactory $parameterDataProviderFactory, AnnotationDataProviderFactory $annotationDataProviderFactory)
     {
         $this->parameterDataProviderFactory = $parameterDataProviderFactory;
-        $this->reader = $reader;
+        $this->annotationDataProviderFactory = $annotationDataProviderFactory;
     }
     /**
      * Create a new method data provider
@@ -50,6 +49,6 @@ class MethodDataProviderFactory
      */
     public function make(ReflectionMethod $method)
     {
-        return new MethodDataProvider($method, $this->parameterDataProviderFactory, $this->reader);
+        return new MethodDataProvider($method, $this->parameterDataProviderFactory, $this->annotationDataProviderFactory);
     }
 }

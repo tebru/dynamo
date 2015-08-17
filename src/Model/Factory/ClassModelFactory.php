@@ -21,16 +21,30 @@ use Tebru\Dynamo\Model\ClassModel;
  */
 class ClassModelFactory
 {
-    private $namespacePrefix;
     /**
+     * Prefix to add to namespace
+     *
+     * @var string
+     */
+    private $namespacePrefix;
+
+    /**
+     * Creates interface data providers
+     *
      * @var InterfaceDataProviderFactory
      */
     private $interfaceDataProviderFactory;
+
     /**
+     * Creates method models
+     *
      * @var MethodModelFactory
      */
     private $methodModelFactory;
+
     /**
+     * Symfony event dispatcher
+     *
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -64,7 +78,6 @@ class ClassModelFactory
     public function make($interfaceName)
     {
         $interfaceDataProvider = $this->interfaceDataProviderFactory->make($interfaceName);
-        $classAnnotations = $interfaceDataProvider->getAnnotations();
 
         $namespace = $this->namespacePrefix . '\\' . $interfaceDataProvider->getNamespace();
         $classModel = new ClassModel($namespace, $interfaceDataProvider->getName(), $interfaceDataProvider->getFullName());
@@ -77,8 +90,7 @@ class ClassModelFactory
             $methodModel = $this->methodModelFactory->make($classModel, $methodDataProvider);
 
             $annotationCollection = new AnnotationCollection();
-            $annotationCollection->setClassAnnotations($classAnnotations);
-            $annotationCollection->setMethodAnnotations($methodDataProvider->getAnnotations());
+            $annotationCollection->addAnnotations($methodDataProvider->getAnnotations());
 
             // dispatch the method event
             $this->eventDispatcher->dispatch(MethodEvent::NAME, new MethodEvent($methodModel, $annotationCollection));

@@ -42,7 +42,7 @@ class MethodModelFactoryTest extends MockeryTestCase
         $methodDataProvider->shouldReceive('getName')->times(1)->withNoArgs()->andReturn('testMethod');
         $methodDataProvider->shouldReceive('getParameters')->times(1)->withNoArgs()->andReturn([$parameterDataProvider]);
         $parameterModelFactory->shouldReceive('make')->times(1)->with(Mockery::type(MethodModel::class), $parameterDataProvider)->andReturn($parameterModel);
-        $parameterModel->shouldReceive('getName')->times(2)->withNoArgs()->andReturn('testParameter');
+        $parameterModel->shouldReceive('getName')->times(1)->withNoArgs()->andReturn('testParameter');
 
         $factory = new MethodModelFactory($parameterModelFactory);
         $methodModel = $factory->make($classModel, $methodDataProvider);

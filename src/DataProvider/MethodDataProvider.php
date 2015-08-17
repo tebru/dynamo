@@ -6,10 +6,8 @@
 
 namespace Tebru\Dynamo\DataProvider;
 
-use Doctrine\Common\Annotations\Reader;
-use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
+use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
 
 /**
@@ -34,24 +32,27 @@ class MethodDataProvider
     private $parameterDataProviderFactory;
 
     /**
-     * Doctrine annotation reader
+     * Returns method and class annotations
      *
-     * @var Reader
+     * @var AnnotationDataProviderFactory
      */
-    private $reader;
+    private $annotationDataProviderFactory;
 
     /**
      * Constructor
      *
      * @param ReflectionMethod $reflectionMethod
      * @param ParameterDataProviderFactory $parameterDataProviderFactory
-     * @param Reader $reader
+     * @param AnnotationDataProviderFactory $annotationDataProviderFactory
      */
-    public function __construct(ReflectionMethod $reflectionMethod, ParameterDataProviderFactory $parameterDataProviderFactory, Reader $reader)
-    {
+    public function __construct(
+        ReflectionMethod $reflectionMethod,
+        ParameterDataProviderFactory $parameterDataProviderFactory,
+        AnnotationDataProviderFactory $annotationDataProviderFactory
+    ) {
         $this->reflectionMethod = $reflectionMethod;
         $this->parameterDataProviderFactory = $parameterDataProviderFactory;
-        $this->reader = $reader;
+        $this->annotationDataProviderFactory = $annotationDataProviderFactory;
     }
 
     /**
@@ -80,31 +81,14 @@ class MethodDataProvider
     }
 
     /**
-     * Get the method annotations
+     * Get the method annotations including the class annotations
      *
      * @return array
      */
     public function getAnnotations()
     {
-        $annotations = $this->reader->getMethodAnnotations($this->reflectionMethod);
+        $annotationProvider = $this->annotationDataProviderFactory->make($this->reflectionMethod);
 
-        $reflectionClass = $this->reflectionMethod->getDeclaringClass();
-        $parents = $reflectionClass->getInterfaceNames();
-
-        foreach ($parents as $parent) {
-            $parentClass = new ReflectionClass($parent);
-
-            try {
-                $parentMethod = $parentClass->getMethod($this->getName());
-            } catch (ReflectionException $exception) {
-                //name does not exist
-                continue;
-            }
-
-            $parentAnnotations = $this->reader->getMethodAnnotations($parentMethod);
-            $annotations = array_merge($annotations, $parentAnnotations);
-        }
-
-        return $annotations;
+        return $annotationProvider->getAnnotations();
     }
 }

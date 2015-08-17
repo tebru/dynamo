@@ -9,6 +9,7 @@ namespace Tebru\Dynamo\Test\Unit\Collection;
 use PHPUnit_Framework_TestCase;
 use Tebru\Dynamo\Collection\AnnotationCollection;
 use Tebru\Dynamo\Test\Mock\MockAnnotation;
+use Tebru\Dynamo\Test\Mock\MockAnnotation2;
 
 /**
  * Class AnnotationCollectionTest
@@ -17,188 +18,84 @@ use Tebru\Dynamo\Test\Mock\MockAnnotation;
  */
 class AnnotationCollectionTest extends PHPUnit_Framework_TestCase
 {
-    public function testCanAddClassAnnotation()
+    public function testCanAddAnnotation()
     {
         $annotation = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($annotation);
+        $collection->addAnnotation($annotation);
 
-        $annotations = $collection->getClassAnnotations();
-        $this->assertSame($annotation, $annotations[MockAnnotation::class][0]);
+        $this->assertAttributeSame(['mock' => [$annotation]], 'annotations', $collection);
     }
 
-    public function testCanAddMultipleClassAnnotations()
+    public function testCanAddMultipleAnnotations()
     {
         $annotation1 = new MockAnnotation();
         $annotation2 = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->setClassAnnotations([$annotation1, $annotation2]);
+        $collection->addAnnotations([$annotation1, $annotation2]);
 
-        $annotations = $collection->getClassAnnotations();
-        $this->assertSame($annotation1, $annotations[MockAnnotation::class][0]);
-        $this->assertSame($annotation2, $annotations[MockAnnotation::class][1]);
+        $this->assertAttributeSame(['mock' => [$annotation1, $annotation2]], 'annotations', $collection);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage May not use multiple instances of annotation
      */
-    public function testAddClassAnnotationThrowsException()
+    public function testAddAnnotationThrowsException()
     {
         $collection = new AnnotationCollection();
-        $collection->addClassAnnotation('test');
+        $collection->addAnnotation(new MockAnnotation2());
+        $collection->addAnnotation(new MockAnnotation2());
     }
 
-    public function testCanAddMethodAnnotation()
-    {
-        $annotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation($annotation);
-
-        $annotations = $collection->getMethodAnnotations();
-        $this->assertSame($annotation, $annotations[MockAnnotation::class][0]);
-    }
-
-    public function testCanAddMultipleMethodAnnotations()
+    public function testCanGetAllAnnotations()
     {
         $annotation1 = new MockAnnotation();
         $annotation2 = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->setMethodAnnotations([$annotation1, $annotation2]);
+        $collection->addAnnotation($annotation1);
+        $collection->addAnnotation($annotation2);
 
-        $annotations = $collection->getMethodAnnotations();
-        $this->assertSame($annotation1, $annotations[MockAnnotation::class][0]);
-        $this->assertSame($annotation2, $annotations[MockAnnotation::class][1]);
+        $this->assertSame(['mock' => [$annotation1, $annotation2]], $collection->getAnnotations());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testAddMethodAnnotationThrowsException()
-    {
-        $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation('test');
-    }
-
-    public function testCanGetClassAnnotations()
+    public function testCanGetSingleAnnotation()
     {
         $annotation = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($annotation);
+        $collection->addAnnotation($annotation);
 
-        $this->assertEquals([MockAnnotation::class => [$annotation]], $collection->getClassAnnotations());
+        $this->assertSame([$annotation], $collection->get(MockAnnotation::NAME));
     }
 
-    public function testCanGetMethodAnnotations()
+
+    public function testAnnotationExists()
     {
         $annotation = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation($annotation);
+        $collection->addAnnotation($annotation);
 
-        $this->assertEquals([MockAnnotation::class => [$annotation]], $collection->getMethodAnnotations());
+        $this->assertTrue($collection->exists(MockAnnotation::NAME));
     }
 
-    public function testCanAddBothClassAndMethodAnnotations()
-    {
-        $classAnnotation1 = new MockAnnotation();
-        $classAnnotation2 = new MockAnnotation();
-        $methodAnnotation1 = new MockAnnotation();
-        $methodAnnotation2 = new MockAnnotation();
-
-        $collection = new AnnotationCollection();
-        $collection->setMethodAnnotations([$methodAnnotation1, $methodAnnotation2]);
-        $collection->setClassAnnotations([$classAnnotation1, $classAnnotation2]);
-
-        $annotations = $collection->getAnnotations();
-        $this->assertSame($classAnnotation1, $annotations[MockAnnotation::class][0]);
-        $this->assertSame($classAnnotation2, $annotations[MockAnnotation::class][1]);
-        $this->assertSame($methodAnnotation1, $annotations[MockAnnotation::class][2]);
-        $this->assertSame($methodAnnotation2, $annotations[MockAnnotation::class][3]);
-    }
-
-    public function testCanGetBothClassAndMethodAnnotations()
-    {
-        $classAnnotation1 = new MockAnnotation();
-        $classAnnotation2 = new MockAnnotation();
-        $methodAnnotation1 = new MockAnnotation();
-        $methodAnnotation2 = new MockAnnotation();
-
-        $collection = new AnnotationCollection();
-        $collection->setMethodAnnotations([$methodAnnotation1, $methodAnnotation2]);
-        $collection->setClassAnnotations([$classAnnotation1, $classAnnotation2]);
-
-        $expected = [MockAnnotation::class => [$classAnnotation1, $classAnnotation2, $methodAnnotation1, $methodAnnotation2]];
-        $this->assertEquals($expected, $collection->getAnnotations());
-    }
-
-    public function testClassAnnotationExists()
+    public function testAnnotationDoesNotExist()
     {
         $annotation = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($annotation);
+        $collection->addAnnotation($annotation);
 
-        $this->assertTrue($collection->classAnnotationExists(MockAnnotation::class));
+        $this->assertFalse($collection->exists(MockAnnotation2::class));
     }
 
-    public function testClassAnnotationDoesNotExist()
+    public function testCanIterate()
     {
         $annotation = new MockAnnotation();
         $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation($annotation);
+        $collection->addAnnotation($annotation);
 
-        $this->assertFalse($collection->classAnnotationExists(MockAnnotation::class));
-    }
-
-    public function testMethodAnnotationExists()
-    {
-        $annotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation($annotation);
-
-        $this->assertTrue($collection->methodAnnotationExists(MockAnnotation::class));
-    }
-
-    public function testMethodAnnotationDoesNotExist()
-    {
-        $annotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($annotation);
-
-        $this->assertFalse($collection->methodAnnotationExists(MockAnnotation::class));
-    }
-
-    public function testAnnotationExistsClassOnly()
-    {
-        $annotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($annotation);
-
-        $this->assertTrue($collection->annotationExists(MockAnnotation::class));
-    }
-
-    public function testAnnotationExistsMethodOnly()
-    {
-        $annotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addMethodAnnotation($annotation);
-
-        $this->assertTrue($collection->annotationExists(MockAnnotation::class));
-    }
-
-    public function testAnnotationExistsBothClassAndMethod()
-    {
-        $classAnnotation = new MockAnnotation();
-        $methodAnnotation = new MockAnnotation();
-        $collection = new AnnotationCollection();
-        $collection->addClassAnnotation($classAnnotation);
-        $collection->addMethodAnnotation($methodAnnotation);
-
-        $this->assertTrue($collection->annotationExists(MockAnnotation::class));
-    }
-
-    public function testAnnotationDoesNotExistBothClassAndMethod()
-    {
-        $collection = new AnnotationCollection();
-
-        $this->assertFalse($collection->annotationExists(MockAnnotation::class));
+        foreach ($collection as $key => $a) {
+            $this->assertSame('mock', $key);
+            $this->assertSame([$annotation], $a);
+        }
     }
 }

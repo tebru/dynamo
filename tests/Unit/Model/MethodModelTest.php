@@ -57,7 +57,7 @@ class MethodModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Parameter "parameter1" already exists in method
      */
     public function testAddParameterThatAlreadyExistsThrowsException()
@@ -101,7 +101,7 @@ class MethodModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \OutOfBoundsException
      * @expectedExceptionMessage Parameter "parameter1" does not exist in method
      */
     public function testGetParameterWillThrowException()

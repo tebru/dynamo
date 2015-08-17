@@ -79,7 +79,7 @@ class ClassModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Method "method1" already exists on class
      */
     public function testAddMethodThatAlreadyExistsThrowsException()
@@ -123,7 +123,7 @@ class ClassModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \OutOfBoundsException
      * @expectedExceptionMessage Method "method1" does not exist on class
      */
     public function testGetMethodWillThrowException()
@@ -142,7 +142,7 @@ class ClassModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Property "property1" already exists on class
      */
     public function testAddPropertyThatAlreadyExistsThrowsException()
@@ -186,7 +186,7 @@ class ClassModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \OutOfBoundsException
      * @expectedExceptionMessage Property "property1" does not exist on class
      */
     public function testGetPropertyWillThrowException()

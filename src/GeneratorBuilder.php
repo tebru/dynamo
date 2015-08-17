@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Tebru\Dynamo\Cache\ClassModelCacher;
+use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\InterfaceDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\MethodDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
@@ -56,6 +57,13 @@ class GeneratorBuilder
      * @var Reader
      */
     private $reader;
+
+    /**
+     * Creates annotation data providers
+     *
+     * @var AnnotationDataProviderFactory
+     */
+    private $annotationDataProviderFactory;
 
     /**
      * Creates method data providers
@@ -191,6 +199,17 @@ class GeneratorBuilder
     public function setReader($reader)
     {
         $this->reader = $reader;
+
+        return $this;
+    }
+
+    /**
+     * @param AnnotationDataProviderFactory $annotationDataProviderFactory
+     * @return $this
+     */
+    public function setAnnotationDataProviderFactory($annotationDataProviderFactory)
+    {
+        $this->annotationDataProviderFactory = $annotationDataProviderFactory;
 
         return $this;
     }
@@ -379,8 +398,12 @@ class GeneratorBuilder
             $this->reader = new AnnotationReader();
         }
 
+        if (null === $this->annotationDataProviderFactory) {
+            $this->annotationDataProviderFactory = new AnnotationDataProviderFactory($this->reader);
+        }
+
         if (null === $this->methodDataProviderFactory) {
-            $this->methodDataProviderFactory = new MethodDataProviderFactory($this->parameterDataProviderFactory, $this->reader);
+            $this->methodDataProviderFactory = new MethodDataProviderFactory($this->parameterDataProviderFactory, $this->annotationDataProviderFactory);
         }
 
         if (null === $this->interfaceDataProviderFactory) {

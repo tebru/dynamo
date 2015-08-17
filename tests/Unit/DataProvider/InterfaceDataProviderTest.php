@@ -32,8 +32,8 @@ class InteraceDataProviderTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Must use a valid interface
+     * @expectedException \LogicException
+     * @expectedExceptionMessage "Foo" is not a valid interface
      */
     public function testWillThrowExceptionIfInterfaceNotExists()
     {
@@ -103,14 +103,6 @@ class InteraceDataProviderTest extends MockeryTestCase
         $methods = $provider->getMethods();
 
         $this->assertCount(4, $methods);
-    }
-
-    public function testGetClassAnnotations()
-    {
-        $provider = $this->getProvider();
-
-        $annotations = $provider->getAnnotations();
-        $this->assertInstanceOf(MockAnnotation::class, $annotations[0]);
     }
 
     private function getProvider($interface = MockInterface::class)

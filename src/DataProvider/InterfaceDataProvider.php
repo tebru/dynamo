@@ -7,7 +7,6 @@
 namespace Tebru\Dynamo\DataProvider;
 
 use Doctrine\Common\Annotations\Reader;
-use InvalidArgumentException;
 use ReflectionClass;
 use Tebru;
 use Tebru\Dynamo\DataProvider\Factory\MethodDataProviderFactory;
@@ -49,7 +48,7 @@ class InterfaceDataProvider
      */
     public function __construct($interfaceName, MethodDataProviderFactory $methodDataProviderFactory, Reader $reader)
     {
-        Tebru\assert(interface_exists($interfaceName), new InvalidArgumentException('Must use a valid interface'));
+        Tebru\assertThat(interface_exists($interfaceName), '"%s" is not a valid interface', $interfaceName);
 
         $this->reflectionClass = new ReflectionClass($interfaceName);
         $this->methodDataProviderFactory = $methodDataProviderFactory;
@@ -129,23 +128,5 @@ class InterfaceDataProvider
         }
 
         return $methods;
-    }
-
-    /**
-     * Get the class annotations
-     *
-     * @return array
-     */
-    public function getAnnotations()
-    {
-        $annotations = $this->reader->getClassAnnotations($this->reflectionClass);
-
-        // get parent annotations
-        foreach ($this->getParents() as $parent) {
-            $parentAnnotations = $this->reader->getClassAnnotations(new ReflectionClass($parent));
-            $annotations = array_merge($annotations, $parentAnnotations);
-        }
-
-        return $annotations;
     }
 }

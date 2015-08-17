@@ -9,15 +9,14 @@ namespace Tebru\Dynamo\Test\Mock;
 use Tebru\Dynamo\Annotation\DynamoAnnotation;
 
 /**
- * Class MockAnnotation
+ * Class MockAnnotation2
  *
  * @author Nate Brunette <n@tebru.net>
- *
  * @Annotation
  */
-class MockAnnotation implements DynamoAnnotation
+class MockAnnotation2 implements DynamoAnnotation
 {
-    const NAME = 'mock';
+    const NAME = 'mock2';
 
     public function getName()
     {
@@ -26,6 +25,6 @@ class MockAnnotation implements DynamoAnnotation
 
     public function allowMultiple()
     {
-        return true;
+        return false;
     }
 }

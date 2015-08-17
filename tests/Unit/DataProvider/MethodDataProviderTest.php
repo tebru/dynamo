@@ -6,10 +6,13 @@
 
 namespace Tebru\Dynamo\Test\Unit\DataProvider;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Annotation;
 use Mockery;
 use ReflectionClass;
 use ReflectionParameter;
+use Tebru\Dynamo\Collection\AnnotationCollection;
+use Tebru\Dynamo\DataProvider\AnnotationDataProvider;
+use Tebru\Dynamo\DataProvider\Factory\AnnotationDataProviderFactory;
 use Tebru\Dynamo\DataProvider\Factory\ParameterDataProviderFactory;
 use Tebru\Dynamo\DataProvider\MethodDataProvider;
 use Tebru\Dynamo\DataProvider\ParameterDataProvider;
@@ -40,11 +43,15 @@ class MethodDataProviderTest extends MockeryTestCase
 
     public function testGetMethodParameters()
     {
-        $factory = Mockery::mock(ParameterDataProviderFactory::class);
-        $factory->shouldReceive('make')->times(2)->with(Mockery::type(ReflectionParameter::class))->andReturn(Mockery::mock(ParameterDataProvider::class));
-
+        $parameterDataProviderFactory = Mockery::mock(ParameterDataProviderFactory::class);
+        $parameterDataProvider = Mockery::mock(ParameterDataProvider::class);
+        $annotationDataProviderFactory = Mockery::mock(AnnotationDataProviderFactory::class);
         $reflectionClass = new ReflectionClass(MockInterface::class);
-        $provider = new MethodDataProvider($reflectionClass->getMethod('method1'), $factory, new AnnotationReader());
+        $reflectionMethod = $reflectionClass->getMethod('method1');
+
+        $parameterDataProviderFactory->shouldReceive('make')->times(2)->with(Mockery::type(ReflectionParameter::class))->andReturn($parameterDataProvider);
+
+        $provider = new MethodDataProvider($reflectionMethod, $parameterDataProviderFactory, $annotationDataProviderFactory);
         $parameters = $provider->getParameters();
 
         $this->assertCount(2, $parameters);
@@ -52,15 +59,24 @@ class MethodDataProviderTest extends MockeryTestCase
 
     public function testGetAnnotations()
     {
-        $provider = $this->getProvider();
+        $parameterDataProviderFactory = Mockery::mock(ParameterDataProviderFactory::class);
+        $annotationDataProviderFactory = Mockery::mock(AnnotationDataProviderFactory::class);
+        $annotationDataProvider = Mockery::mock(AnnotationDataProvider::class);
+        $reflectionClass = new ReflectionClass(MockInterface::class);
+        $reflectionMethod = $reflectionClass->getMethod('method1');
 
-        $this->assertInstanceOf(MockAnnotation::class, $provider->getAnnotations()[0]);
+        $annotationDataProviderFactory->shouldReceive('make')->times(1)->with($reflectionMethod)->andReturn($annotationDataProvider);
+        $annotationDataProvider->shouldReceive('getAnnotations')->times(1)->withNoArgs()->andReturn(new AnnotationCollection());
+
+        $provider = new MethodDataProvider($reflectionMethod, $parameterDataProviderFactory, $annotationDataProviderFactory);
+
+        $this->assertInstanceOf(AnnotationCollection::class, $provider->getAnnotations());
     }
 
     private function getProvider()
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
 
-        return new MethodDataProvider($reflectionClass->getMethod('method1'), Mockery::mock(ParameterDataProviderFactory::class), new AnnotationReader());
+        return new MethodDataProvider($reflectionClass->getMethod('method1'), Mockery::mock(ParameterDataProviderFactory::class), Mockery::mock(AnnotationDataProviderFactory::class));
     }
 }
