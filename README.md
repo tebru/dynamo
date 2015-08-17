@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/tebru/dynamo.svg?branch=v0.1.0)](https://travis-ci.org/tebru/dynamo)
+[![Coverage Status](https://coveralls.io/repos/tebru/dynamo/badge.svg?branch=master&service=github)](https://coveralls.io/github/tebru/dynamo?branch=master)
+
 # Dynamo
 
 This library allows you to take an interface annotated with Doctrine annotations and generate a class.  It
