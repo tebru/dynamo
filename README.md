@@ -32,3 +32,19 @@ After you have a generator, you can pass your interface name into it and it will
 cache directory
 
     $generator->createAndWrite(MyInterface::class);
+
+## Events
+
+It's essential to subscribe to at least the `MethodEvent` as it is what allows you to add a method
+body to the method.  The `MethodModel` and `AnnotationCollection` are available on the event.
+
+The two other events are `StartEvent` and `EndEvent`, both of which provide access to the `ClassModel`.
+
+    $eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+    $eventDispatcher->addListener(new MethodListener());
+    
+    $generator = \Tebru\Dynamo\Generator::builder()
+        ->namespacePrefix('My\Custom\Library')
+        ->setCacheDir('path/to/cache/vendor-name')
+        ->setEventDispatcher($eventDispatcher)
+        ->build();
