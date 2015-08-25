@@ -48,3 +48,31 @@ The two other events are `StartEvent` and `EndEvent`, both of which provide acce
         ->setCacheDir('path/to/cache/vendor-name')
         ->setEventDispatcher($eventDispatcher)
         ->build();
+
+## Sample listener
+
+Here is a skeleton of a method listener
+
+    <?php
+    
+    namespace Foo;
+    
+    use Tebru\Dynamo\Event\MethodEvent;
+    
+    class MethodListener
+    {
+        public function __invoke(MethodEvent $event)
+        {
+            $methodModel = $event->getMethodModel();
+            $annotationCollection = $event->getAnnotationCollection();
+            
+            $body = [];
+            if ($annotation->collection->exists(MyAnnotation::class)) {
+                $body[] = '$var = "annotation exists";';
+            } else {
+                $body[] = '$var = "annotation not exists";';
+            }
+            
+            $methodModel->setBody(implode($body));
+        }
+    }
