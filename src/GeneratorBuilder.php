@@ -185,7 +185,7 @@ class GeneratorBuilder
      * @param ParameterDataProviderFactory $parameterDataProviderFactory
      * @return $this
      */
-    public function setParameterDataProviderFactory($parameterDataProviderFactory)
+    public function setParameterDataProviderFactory(ParameterDataProviderFactory $parameterDataProviderFactory)
     {
         $this->parameterDataProviderFactory = $parameterDataProviderFactory;
 
@@ -196,7 +196,7 @@ class GeneratorBuilder
      * @param Reader $reader
      * @return $this
      */
-    public function setReader($reader)
+    public function setReader(Reader $reader)
     {
         $this->reader = $reader;
 
@@ -207,7 +207,7 @@ class GeneratorBuilder
      * @param AnnotationDataProviderFactory $annotationDataProviderFactory
      * @return $this
      */
-    public function setAnnotationDataProviderFactory($annotationDataProviderFactory)
+    public function setAnnotationDataProviderFactory(AnnotationDataProviderFactory $annotationDataProviderFactory)
     {
         $this->annotationDataProviderFactory = $annotationDataProviderFactory;
 
@@ -218,7 +218,7 @@ class GeneratorBuilder
      * @param MethodDataProviderFactory $methodDataProviderFactory
      * @return $this
      */
-    public function setMethodDataProviderFactory($methodDataProviderFactory)
+    public function setMethodDataProviderFactory(MethodDataProviderFactory $methodDataProviderFactory)
     {
         $this->methodDataProviderFactory = $methodDataProviderFactory;
 
@@ -229,7 +229,7 @@ class GeneratorBuilder
      * @param InterfaceDataProviderFactory $interfaceDataProviderFactory
      * @return $this
      */
-    public function setInterfaceDataProviderFactory($interfaceDataProviderFactory)
+    public function setInterfaceDataProviderFactory(InterfaceDataProviderFactory $interfaceDataProviderFactory)
     {
         $this->interfaceDataProviderFactory = $interfaceDataProviderFactory;
 
@@ -240,7 +240,7 @@ class GeneratorBuilder
      * @param ParameterModelFactory $parameterModelFactory
      * @return $this
      */
-    public function setParameterModelFactory($parameterModelFactory)
+    public function setParameterModelFactory(ParameterModelFactory $parameterModelFactory)
     {
         $this->parameterModelFactory = $parameterModelFactory;
 
@@ -251,7 +251,7 @@ class GeneratorBuilder
      * @param MethodModelFactory $methodModelFactory
      * @return $this
      */
-    public function setMethodModelFactory($methodModelFactory)
+    public function setMethodModelFactory(MethodModelFactory $methodModelFactory)
     {
         $this->methodModelFactory = $methodModelFactory;
 
@@ -262,7 +262,7 @@ class GeneratorBuilder
      * @param EventDispatcherInterface $eventDispatcher
      * @return $this
      */
-    public function setEventDispatcher($eventDispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
 
@@ -273,7 +273,7 @@ class GeneratorBuilder
      * @param ClassModelFactory $classModelFactory
      * @return $this
      */
-    public function setClassModelFactory($classModelFactory)
+    public function setClassModelFactory(ClassModelFactory $classModelFactory)
     {
         $this->classModelFactory = $classModelFactory;
 
@@ -295,7 +295,7 @@ class GeneratorBuilder
      * @param Filesystem $filesystem
      * @return $this
      */
-    public function setFilesystem($filesystem)
+    public function setFilesystem(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
 
@@ -306,7 +306,7 @@ class GeneratorBuilder
      * @param BuilderFactory $builderFactory
      * @return $this
      */
-    public function setBuilderFactory($builderFactory)
+    public function setBuilderFactory(BuilderFactory $builderFactory)
     {
         $this->builderFactory = $builderFactory;
 
@@ -317,7 +317,7 @@ class GeneratorBuilder
      * @param Lexer $lexer
      * @return $this
      */
-    public function setLexer($lexer)
+    public function setLexer(Lexer $lexer)
     {
         $this->lexer = $lexer;
 
@@ -328,7 +328,7 @@ class GeneratorBuilder
      * @param ParserAbstract $parser
      * @return $this
      */
-    public function setParser($parser)
+    public function setParser(ParserAbstract $parser)
     {
         $this->parser = $parser;
 
@@ -339,7 +339,7 @@ class GeneratorBuilder
      * @param NodeTraverserInterface $traverser
      * @return $this
      */
-    public function setTraverser($traverser)
+    public function setTraverser(NodeTraverserInterface $traverser)
     {
         $this->traverser = $traverser;
 
@@ -350,7 +350,7 @@ class GeneratorBuilder
      * @param ClassModelTransformer $classModelTransformer
      * @return $this
      */
-    public function setClassModelTransformer($classModelTransformer)
+    public function setClassModelTransformer(ClassModelTransformer $classModelTransformer)
     {
         $this->classModelTransformer = $classModelTransformer;
 
@@ -361,7 +361,7 @@ class GeneratorBuilder
      * @param PrettyPrinterAbstract $printer
      * @return $this
      */
-    public function setPrinter($printer)
+    public function setPrinter(PrettyPrinterAbstract $printer)
     {
         $this->printer = $printer;
 
@@ -372,7 +372,7 @@ class GeneratorBuilder
      * @param ClassModelCacher $classModelCacher
      * @return $this
      */
-    public function setClassModelCacher($classModelCacher)
+    public function setClassModelCacher(ClassModelCacher $classModelCacher)
     {
         $this->classModelCacher = $classModelCacher;
 
