@@ -91,6 +91,11 @@ class ClassModelFactory
 
             $annotationCollection = $methodDataProvider->getAnnotations();
 
+            // skip methods that don't have any annotations
+            if (empty($annotationCollection->getAnnotations())) {
+                continue;
+            }
+
             // dispatch the method event
             $this->eventDispatcher->dispatch(MethodEvent::NAME, new MethodEvent($methodModel, $annotationCollection));
 

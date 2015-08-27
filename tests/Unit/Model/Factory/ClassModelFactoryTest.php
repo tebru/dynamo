@@ -65,9 +65,10 @@ class ClassModelFactoryTest extends MockeryTestCase
             $interfaceDataProvider->shouldReceive('getNamespace')->times(1)->withNoArgs()->andReturn('Tebru\\Namespace');
             $interfaceDataProvider->shouldReceive('getName')->times(1)->withNoArgs()->andReturn('ClassName');
             $interfaceDataProvider->shouldReceive('getFullName')->times(1)->withNoArgs()->andReturn('\\' . MockInterface::class);
-            $interfaceDataProvider->shouldReceive('getMethods')->times(1)->withNoArgs()->andReturn([$methodDataProvider]);
-            $methodModelFactory->shouldReceive('make')->times(1)->with(Mockery::type(ClassModel::class), $methodDataProvider)->andReturn($methodModel);
+            $interfaceDataProvider->shouldReceive('getMethods')->times(1)->withNoArgs()->andReturn([$methodDataProvider, $methodDataProvider]);
+            $methodModelFactory->shouldReceive('make')->times(2)->with(Mockery::type(ClassModel::class), $methodDataProvider)->andReturn($methodModel);
             $methodDataProvider->shouldReceive('getAnnotations')->times(1)->withNoArgs()->andReturn($annotationCollection);
+            $methodDataProvider->shouldReceive('getAnnotations')->times(1)->withNoArgs()->andReturn([]);
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(StartEvent::NAME, Mockery::type(StartEvent::class))->andReturnNull();
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(MethodEvent::NAME, Mockery::type(MethodEvent::class))->andReturnNull();
             $eventDispatcher->shouldReceive('dispatch')->times(1)->with(EndEvent::NAME, Mockery::type(EndEvent::class))->andReturnNull();
