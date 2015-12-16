@@ -7,7 +7,6 @@
 namespace Tebru\Dynamo\Model\Factory;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Tebru\Dynamo\Collection\AnnotationCollection;
 use Tebru\Dynamo\DataProvider\Factory\InterfaceDataProviderFactory;
 use Tebru\Dynamo\Event\EndEvent;
 use Tebru\Dynamo\Event\StartEvent;
@@ -92,7 +91,8 @@ class ClassModelFactory
             $annotationCollection = $methodDataProvider->getAnnotations();
 
             // skip methods that don't have any annotations
-            if (empty($annotationCollection->getAnnotations())) {
+            $annotations = $annotationCollection->getAnnotations();
+            if (empty($annotations)) {
                 continue;
             }
 
