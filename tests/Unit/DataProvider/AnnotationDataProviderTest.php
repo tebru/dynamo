@@ -39,7 +39,7 @@ class AnnotationDataProviderTest extends MockeryTestCase
 
         $reader = Mockery::mock(Reader::class);
 
-        $reader->shouldReceive('getMethodAnnotations')->times(1)->with($reflectionMethod)->andReturn([new MockAnnotation(), new \stdClass()]);
+        $reader->shouldReceive('getMethodAnnotations')->times(1)->with($reflectionMethod)->andReturn([new MockAnnotation(), new stdClass()]);
         $reader->shouldReceive('getClassAnnotations')->times(1)->with(Mockery::type(ReflectionClass::class))->andReturn([]);
         $reader->shouldReceive('getMethodAnnotations')->times(1)->with(Mockery::type(ReflectionMethod::class))->andReturn([new MockAnnotation(), new MockAnnotation2()]);
         $reader->shouldReceive('getClassAnnotations')->times(1)->with(Mockery::type(ReflectionClass::class))->andReturn([new MockAnnotation()]);
