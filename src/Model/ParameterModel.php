@@ -172,6 +172,46 @@ class ParameterModel
     }
 
     /**
+     * If the typeHint is an int
+     *
+     * @return bool
+     */
+    public function isInt()
+    {
+        return 'int' === $this->typeHint;
+    }
+
+    /**
+     * If the typeHint is a boolean
+     *
+     * @return bool
+     */
+    public function isBool()
+    {
+        return 'bool' === $this->typeHint;
+    }
+
+    /**
+     * If the typeHint is a string
+     *
+     * @return bool
+     */
+    public function isString()
+    {
+        return 'string' === $this->typeHint;
+    }
+
+    /**
+     * If the typeHint is a float
+     *
+     * @return bool
+     */
+    public function isFloat()
+    {
+        return 'float' === $this->typeHint;
+    }
+
+    /**
      * If the typeHint is a class
      *
      * @return bool

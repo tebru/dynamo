@@ -117,6 +117,38 @@ class ParameterModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($parameterModel->isCallable());
     }
 
+    public function testIsInt()
+    {
+        $parameterModel = $this->getParamterModel();
+        $parameterModel->setTypeHint('int');
+
+        $this->assertTrue($parameterModel->isInt());
+    }
+
+    public function testIsBool()
+    {
+        $parameterModel = $this->getParamterModel();
+        $parameterModel->setTypeHint('bool');
+
+        $this->assertTrue($parameterModel->isBool());
+    }
+
+    public function testIsString()
+    {
+        $parameterModel = $this->getParamterModel();
+        $parameterModel->setTypeHint('string');
+
+        $this->assertTrue($parameterModel->isString());
+    }
+
+    public function testIsFloat()
+    {
+        $parameterModel = $this->getParamterModel();
+        $parameterModel->setTypeHint('float');
+
+        $this->assertTrue($parameterModel->isFloat());
+    }
+
     public function testIsObject()
     {
         $parameterModel = $this->getParamterModel();
