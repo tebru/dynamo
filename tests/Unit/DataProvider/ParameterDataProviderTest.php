@@ -6,9 +6,12 @@
 
 namespace Tebru\Dynamo\Test\Unit\DataProvider;
 
+use Mockery;
 use ReflectionClass;
+use ReflectionParameter;
 use Tebru\Dynamo\DataProvider\ParameterDataProvider;
 use Tebru\Dynamo\Test\Mock\MockInterface;
+use Tebru\Dynamo\Test\Mock\MockReflectionParameter;
 use Tebru\Dynamo\Test\Unit\MockeryTestCase;
 
 /**
@@ -22,8 +25,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertInstanceOf(ParameterDataProvider::class, $provider);
     }
@@ -32,8 +35,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('\\Tebru\\Dynamo\\Test\\Mock\\MockClass', $provider->getTypeHint());
     }
@@ -42,8 +45,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[1];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[1];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('array', $provider->getTypeHint());
     }
@@ -52,18 +55,32 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method2');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('callable', $provider->getTypeHint());
     }
 
+    public function testGetTypeHintFromType()
+    {
+        $reflectionParameter = Mockery::mock(MockReflectionParameter::class);
+        $reflectionParameter->shouldReceive('getClass')->times(1)->withNoArgs()->andReturnNull();
+        $reflectionParameter->shouldReceive('isArray')->times(1)->withNoArgs()->andReturn(false);
+        $reflectionParameter->shouldReceive('isCallable')->times(1)->withNoArgs()->andReturn(false);
+        $reflectionParameter->shouldReceive('getType')->times(2)->withNoArgs()->andReturn('int');
+        $provider = new ParameterDataProvider($reflectionParameter);
+
+        $this->assertSame('int', $provider->getTypeHint());
+    }
+
     public function testGetTypeHintNone()
     {
-        $reflectionClass = new ReflectionClass(MockInterface::class);
-        $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = Mockery::mock(MockReflectionParameter::class);
+        $reflectionParameter->shouldReceive('getClass')->times(1)->withNoArgs()->andReturnNull();
+        $reflectionParameter->shouldReceive('isArray')->times(1)->withNoArgs()->andReturn(false);
+        $reflectionParameter->shouldReceive('isCallable')->times(1)->withNoArgs()->andReturn(false);
+        $reflectionParameter->shouldReceive('getType')->times(1)->withNoArgs()->andReturnNull();
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('', $provider->getTypeHint());
     }
@@ -72,8 +89,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('arg1', $provider->getName());
     }
@@ -82,8 +99,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[1];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[1];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertTrue($provider->hasDefaultValue());
     }
@@ -92,8 +109,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertTrue($provider->hasDefaultValue());
     }
@@ -102,8 +119,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertFalse($provider->hasDefaultValue());
     }
@@ -112,8 +129,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method1');
-        $reflectionParamter = $reflectionMethod->getParameters()[1];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[1];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame(null, $provider->getDefaultValue());
     }
@@ -122,8 +139,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[0];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[0];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame(1, $provider->getDefaultValue());
     }
@@ -132,8 +149,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[1];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[1];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('test', $provider->getDefaultValue());
     }
@@ -142,8 +159,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[2];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[2];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame(false, $provider->getDefaultValue());
     }
@@ -152,8 +169,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method3');
-        $reflectionParamter = $reflectionMethod->getParameters()[3];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[3];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame([], $provider->getDefaultValue());
     }
@@ -162,8 +179,8 @@ class ParameterDataProviderTest extends MockeryTestCase
     {
         $reflectionClass = new ReflectionClass(MockInterface::class);
         $reflectionMethod = $reflectionClass->getMethod('method2');
-        $reflectionParamter = $reflectionMethod->getParameters()[1];
-        $provider = new ParameterDataProvider($reflectionParamter);
+        $reflectionParameter = $reflectionMethod->getParameters()[1];
+        $provider = new ParameterDataProvider($reflectionParameter);
 
         $this->assertSame('const2', $provider->getDefaultValue());
     }

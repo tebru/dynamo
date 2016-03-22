@@ -51,6 +51,10 @@ class ParameterDataProvider
             return 'callable';
         }
 
+        if (method_exists($this->reflectionParameter, 'getType') && null !== $this->reflectionParameter->getType()) {
+            return (string) $this->reflectionParameter->getType();
+        }
+
         return '';
     }
 
