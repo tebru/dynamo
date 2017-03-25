@@ -443,7 +443,7 @@ class GeneratorBuilder
         }
 
         if (null === $this->parser) {
-            $this->parser = new Parser($this->lexer);
+            $this->parser = new Parser\Php7($this->lexer);
         }
 
         if (null === $this->traverser) {
